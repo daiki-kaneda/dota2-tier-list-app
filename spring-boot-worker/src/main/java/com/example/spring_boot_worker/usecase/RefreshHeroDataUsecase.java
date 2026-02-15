@@ -17,7 +17,7 @@ public class RefreshHeroDataUsecase {
     private final HeroRepository heroRepository;
 
     void execute() {
-        List<Hero> heros = heroDataSource.fetchAllHeros();
+        List<Hero> heros = heroDataSource.fetchAllHeroes();
         heroRepository.saveAll(heros);
     }
 }

@@ -5,5 +5,5 @@ import java.util.List;
 import com.example.spring_boot_worker.entity.Hero;
 
 public interface HeroDataSource {
-    List<Hero> fetchAllHeros();
+    List<Hero> fetchAllHeroes();
 }
