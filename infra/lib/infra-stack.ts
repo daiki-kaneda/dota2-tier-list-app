@@ -2,26 +2,35 @@ import * as cdk from 'aws-cdk-lib/core';
 import { Construct } from 'constructs';
 import * as ec2 from 'aws-cdk-lib/aws-ec2';
 import * as iam from 'aws-cdk-lib/aws-iam';
-import * as dynamodb from 'aws-cdk-lib/aws-dynamodb'
+import * as dynamodb from 'aws-cdk-lib/aws-dynamodb';
+import * as autoscaling from 'aws-cdk-lib/aws-autoscaling';
+import * as s3 from 'aws-cdk-lib/aws-s3';
 
 export class InfraStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
+    // === S3 ===
+    const assetBucket = new s3.Bucket(this, 'WokerAssetBucket', {
+      encryption: s3.BucketEncryption.S3_MANAGED,
+      removalPolicy: cdk.RemovalPolicy.DESTROY,
+      autoDeleteObjects: true
+    });
+
     // === DynamoDB ===
-    const heroTable = new dynamodb.Table(this,"HeroTable",{
-      tableName:'HeroRankings',
-      partitionKey:{name:'pk',type:dynamodb.AttributeType.STRING},
-      sortKey:{name:'sk',type:dynamodb.AttributeType.STRING},
-      billingMode:dynamodb.BillingMode.PAY_PER_REQUEST,
-      removalPolicy:cdk.RemovalPolicy.DESTROY
+    const heroTable = new dynamodb.Table(this, "HeroTable", {
+      tableName: 'HeroRankings',
+      partitionKey: { name: 'pk', type: dynamodb.AttributeType.STRING },
+      sortKey: { name: 'sk', type: dynamodb.AttributeType.STRING },
+      billingMode: dynamodb.BillingMode.PAY_PER_REQUEST,
+      removalPolicy: cdk.RemovalPolicy.DESTROY
     });
 
     heroTable.addGlobalSecondaryIndex({
-      indexName:'gsi1',
-      partitionKey:{name:'gsi1pk',type:dynamodb.AttributeType.STRING},
-      sortKey:{name:'gsi1sk',type:dynamodb.AttributeType.STRING},
-      projectionType:dynamodb.ProjectionType.ALL
+      indexName: 'gsi1',
+      partitionKey: { name: 'gsi1pk', type: dynamodb.AttributeType.STRING },
+      sortKey: { name: 'gsi1sk', type: dynamodb.AttributeType.STRING },
+      projectionType: dynamodb.ProjectionType.ALL
     });
 
     // === VPC ===
@@ -55,6 +64,34 @@ export class InfraStack extends cdk.Stack {
     });
 
     heroTable.grantReadWriteData(wokerRole);
+    assetBucket.grantRead(wokerRole);
+
+    const asg = new autoscaling.AutoScalingGroup(
+      this, "WorkerAsg", {
+      vpc,
+      instanceType: ec2.InstanceType.of(ec2.InstanceClass.T3, ec2.InstanceSize.MICRO),
+      machineImage: ec2.MachineImage.latestAmazonLinux2023(),
+      role: wokerRole,
+      securityGroup: workerSg,
+      minCapacity: 0,
+      maxCapacity: 1,
+      desiredCapacity: 0,
+      spotPrice: '0.015',
+    });
+
+    const jarName = 'spring-boot-woker.jar';
+    asg.addUserData(
+      // パッケージマネージャの更新
+      'dnf update -y', 
+      // Amazon Corretto 21をインストール
+      'dnf install java-21-amazon-corretto-devel -y', 
+      // S3からJARファイルをダウンロード
+      `aws s3 cp s3://${assetBucket.bucketName}/${jarName} /home/ec2-user/app.jar`,
+      // 実行権限の付与とユーザーの変更
+      'chown ec2-user:ec2-user /home/ec2-user/app.jar',
+      // Spring Bootアプリの実行
+      'sudo -u ec2-user java -jar /home/ec2-user/app.jar'
+    );
 
   }
 }
