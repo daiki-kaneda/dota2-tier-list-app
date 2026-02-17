@@ -30,4 +30,12 @@ public class Hero {
         }
         return (double) wins / picks * 100.0;
     }
+
+    public String getTier() {
+        double winRate = calculateWinRate();
+        if (winRate >= 55.0)return "S";
+        if (winRate >= 52.0)return "A";
+        if (winRate >= 49.0)return "B";
+        return "C";
+    }
 }
