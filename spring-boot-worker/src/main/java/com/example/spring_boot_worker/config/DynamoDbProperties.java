@@ -11,4 +11,5 @@ import lombok.Data;
 public class DynamoDbProperties {
     private String region;
     private String tableName;
+    private int batchWriteChunckSize;
 }

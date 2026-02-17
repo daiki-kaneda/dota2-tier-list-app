@@ -5,3 +5,4 @@ app:
   dynamodb:
     region: ap-northeast-1
     table-name: HeroRankings
+    batch-write-chunck-size: 25
