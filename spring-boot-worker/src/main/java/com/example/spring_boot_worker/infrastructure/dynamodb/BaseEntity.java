@@ -5,7 +5,6 @@ import java.time.Instant;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import software.amazon.awssdk.enhanced.dynamodb.extensions.annotations.DynamoDbVersionAttribute;
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbBean;
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbPartitionKey;
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbSecondaryPartitionKey;
@@ -24,7 +23,6 @@ abstract public class BaseEntity {
     private Instant updatedAt;
     private String gsi1pk;
     private String gsi1sk;
-    private Long version;
     private Long ttl;
 
     @DynamoDbPartitionKey
@@ -35,11 +33,6 @@ abstract public class BaseEntity {
     @DynamoDbSortKey
     public String getSk(){
         return sk;
-    }
-
-    @DynamoDbVersionAttribute
-    public Long getVersion() {
-        return version;
     }
 
     @DynamoDbSecondaryPartitionKey(indexNames = "gsi1")
