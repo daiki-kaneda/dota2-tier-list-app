@@ -73,6 +73,12 @@
         <groupId>software.amazon.awssdk</groupId>
         <artifactId>dynamodb-enhanced</artifactId>
     </dependency>
+
+	<dependency>
+    	<groupId>com.google.guava</groupId>
+    	<artifactId>guava</artifactId>
+    	<version>33.5.0-jre</version>
+	</dependency>
 	</dependencies>
 
 	<build>

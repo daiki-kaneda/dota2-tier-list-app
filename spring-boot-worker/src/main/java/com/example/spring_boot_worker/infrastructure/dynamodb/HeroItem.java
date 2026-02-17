@@ -26,6 +26,10 @@ public class HeroItem extends BaseEntity{
         Instant now = Instant.now();
         item.setCreatedAt(now);
         item.setUpdatedAt(now);
+        item.setGsi1pk("RANKING#LATEST");
+        String paddedWinRate = String.format("%06.2f", hero.calculateWinRate());
+        item.setGsi1sk("WINRATE#"+paddedWinRate);
+
         item.name = hero.getName();
         item.winRate = hero.calculateWinRate();
         item.tier = hero.getTier();
