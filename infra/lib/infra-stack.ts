@@ -93,5 +93,19 @@ export class InfraStack extends cdk.Stack {
       'sudo -u ec2-user java -jar /home/ec2-user/app.jar'
     );
 
+    asg.scaleOnSchedule("ScaleOutAtScheduleTime", {
+      schedule: autoscaling.Schedule.cron({ hour: '0', minute: '0' }), // UTC 0:00 (日本時間 9:00)
+      desiredCapacity: 1,
+      minCapacity: 1,
+      maxCapacity: 1,
+    })
+
+    asg.scaleOnSchedule("ScaleInAtScheduleTime", {
+      schedule: autoscaling.Schedule.cron({ hour: '1', minute: '0' }), // UTC 1:00 (日本時間 10:00)
+      desiredCapacity: 0,
+      minCapacity: 0,
+      maxCapacity: 0,
+    })
+
   }
 }
