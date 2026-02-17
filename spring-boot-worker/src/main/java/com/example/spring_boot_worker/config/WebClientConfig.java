@@ -7,8 +7,8 @@ import org.springframework.web.reactive.function.client.WebClient;
 @Configuration
 public class WebClientConfig{
     @Bean
-    public WebClient openDotaWebClient(WebClient.Builder builder){
-        return builder
+    public WebClient openDotaWebClient(){
+        return WebClient.builder()
         .baseUrl("https://api.opendota.com/api")
         .build();
     }
