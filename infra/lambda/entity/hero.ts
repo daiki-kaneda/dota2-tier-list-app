@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 export const HeroSchema = z.object({
-    createdAt: z.number(),
+    createdAt: z.string(),
     name: z.string().min(1, '名前は必須です'),
     picks: z.number().min(0, 'ピック数は0以上である必要があります'),
     wins: z.number().min(0, '勝利数は0以上である必要があります'),
