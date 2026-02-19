@@ -36,12 +36,12 @@ abstract public class BaseEntity {
     }
 
     @DynamoDbSecondaryPartitionKey(indexNames = "gsi1")
-    public String getGsi1Pk(){
+    public String getGsi1pk(){
         return gsi1pk;
     }
 
     @DynamoDbSecondarySortKey(indexNames = "gsi1")
-    public String getGsi1Sk(){
+    public String getGsi1sk(){
         return gsi1sk;
     }
 }
