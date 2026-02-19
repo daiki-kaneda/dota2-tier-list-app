@@ -5,6 +5,9 @@ import * as iam from 'aws-cdk-lib/aws-iam';
 import * as dynamodb from 'aws-cdk-lib/aws-dynamodb';
 import * as autoscaling from 'aws-cdk-lib/aws-autoscaling';
 import * as s3 from 'aws-cdk-lib/aws-s3';
+import * as lambda from 'aws-cdk-lib/aws-lambda';
+import { NodejsFunction } from 'aws-cdk-lib/aws-lambda-nodejs';
+import * as apigateway from 'aws-cdk-lib/aws-apigateway';
 
 export class InfraStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
@@ -82,9 +85,9 @@ export class InfraStack extends cdk.Stack {
     const jarName = 'spring-boot-woker.jar';
     asg.addUserData(
       // パッケージマネージャの更新
-      'dnf update -y', 
+      'dnf update -y',
       // Amazon Corretto 21をインストール
-      'dnf install java-21-amazon-corretto-devel -y', 
+      'dnf install java-21-amazon-corretto-devel -y',
       // S3からJARファイルをダウンロード
       `aws s3 cp s3://${assetBucket.bucketName}/${jarName} /home/ec2-user/app.jar`,
       // 実行権限の付与とユーザーの変更
@@ -98,14 +101,46 @@ export class InfraStack extends cdk.Stack {
       desiredCapacity: 1,
       minCapacity: 1,
       maxCapacity: 1,
-    })
+    });
 
     asg.scaleOnSchedule("ScaleInAtScheduleTime", {
       schedule: autoscaling.Schedule.cron({ hour: '1', minute: '0' }), // UTC 1:00 (日本時間 10:00)
       desiredCapacity: 0,
       minCapacity: 0,
       maxCapacity: 0,
-    })
+    });
+
+    // === Lambda ===
+    const getHeroListHandler = new NodejsFunction(
+      this,
+      'GetHeroListHandler', {
+      runtime: lambda.Runtime.NODEJS_22_X,
+      entry: '../lambda-api/handler/api/getHeroList.ts',
+      handler: 'handler',
+      environment: {
+        TABLE_NAME: heroTable.tableName
+      }
+    });
+
+    heroTable.grantReadData(getHeroListHandler);
+
+    // === API Gateway ===
+    const api = new apigateway.RestApi(
+      this, 'HeroApi',
+      {
+        restApiName: 'Dota2 Hero Tier API',
+        deployOptions: {
+          stageName:'prod'
+        },
+        defaultCorsPreflightOptions: {
+          allowOrigins: apigateway.Cors.ALL_ORIGINS,
+          allowMethods: apigateway.Cors.ALL_METHODS,
+        },
+      }
+    );
+
+    const heroes = api.root.addResource("heroes");
+    heroes.addMethod('GET',new apigateway.LambdaIntegration(getHeroListHandler));
 
   }
 }
