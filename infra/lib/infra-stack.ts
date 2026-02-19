@@ -115,7 +115,7 @@ export class InfraStack extends cdk.Stack {
       this,
       'GetHeroListHandler', {
       runtime: lambda.Runtime.NODEJS_22_X,
-      entry: '../lambda-api/handler/api/getHeroList.ts',
+      entry: 'lambda/handler/api/getHeroList.ts',
       handler: 'handler',
       environment: {
         TABLE_NAME: heroTable.tableName
