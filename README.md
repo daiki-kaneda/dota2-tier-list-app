@@ -27,9 +27,9 @@ Dota2の全ヒーローの勝率をバックエンドで自動集計し、サー
 - **サーバーレスにおけるCORSの実装**  
   Lambdaプロキシ応答におけるヘッダー付与の必要性を学び、安全なクロスオリジン通信を実現。
 
-## 4. ディレクトリ構成（モノリスの証明）
+## 4. ディレクトリ構成
 ```
 ├── spring-boot-worker/ # Worker (Java)
-├── infra/ # AWS CDK (TypeScript)
+├── infra/ # AWS CDK + Lambda (TypeScript)
 └── frontend/ # Flutter Web App (Dart)
 ```
