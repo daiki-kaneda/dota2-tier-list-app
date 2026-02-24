@@ -6,11 +6,19 @@ import { getHeroList } from "../../usecase/getHeroList";
 const repo: HeroRepository = new DynamoDbHeroRepository(process.env.TABLE_NAME ?? '');
 
 export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
+    const corsHeaders =  {
+                "Access-Control-Allow-Origin": "*",
+                "Access-Control-Allow-Methods": "GET,OPTIONS",
+                "Access-Control-Allow-Headers": "Content-Type",
+            };
     try {
         const result = await getHeroList(repo);
         return {
             statusCode: 200,
-            body: result ? JSON.stringify(result) : ""
+            body: result ? JSON.stringify(result) : "",
+            headers: {
+                ...corsHeaders
+            }
         }
     } catch (e) {
         console.error(e);
@@ -18,9 +26,7 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
             statusCode: 500,
             body: JSON.stringify({ message: "Internal Server Error" }),
             headers: {
-                "Access-Control-Allow-Origin": "*",
-                "Access-Control-Allow-Methods": "GET,OPTIONS",
-                "Access-Control-Allow-Headers": "Content-Type",
+                ...corsHeaders
             }
         }
     }
