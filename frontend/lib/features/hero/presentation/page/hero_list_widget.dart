@@ -10,11 +10,36 @@ class HeroListWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      itemBuilder: (context, index) {
-        return HeroListTile(heroes[index]);
-      },
-      itemCount: heroes.length,
+    final groups = <Tier, List<Hero>>{};
+
+    for (final tier in Tier.values) {
+      groups[tier] = heroes.where((h) => h.tier == tier).toList();
+    }
+
+    return CustomScrollView(
+      slivers: [
+        for (final tier in Tier.values) ...[
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Text(
+                '${tier.name} Tier',
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  color: tier.color,
+                ),
+              ),
+            ),
+          ),
+          SliverList(
+            delegate: SliverChildBuilderDelegate((context, index) {
+              final hero = groups[tier]![index];
+              return HeroListTile(hero);
+            }, childCount: groups[tier]?.length ?? 0),
+          ),
+        ],
+      ],
     );
   }
 }
@@ -40,7 +65,7 @@ class WinRateWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-     final formatter = NumberFormat.compact();
+    final formatter = NumberFormat.compact();
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
