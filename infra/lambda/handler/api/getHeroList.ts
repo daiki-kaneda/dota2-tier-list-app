@@ -16,7 +16,12 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
         console.error(e);
         return {
             statusCode: 500,
-            body: JSON.stringify({ message: "Internal Server Error" })
+            body: JSON.stringify({ message: "Internal Server Error" }),
+            headers: {
+                "Access-Control-Allow-Origin": "*",
+                "Access-Control-Allow-Methods": "GET,OPTIONS",
+                "Access-Control-Allow-Headers": "Content-Type",
+            }
         }
     }
 }

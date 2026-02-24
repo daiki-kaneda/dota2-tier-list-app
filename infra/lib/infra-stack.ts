@@ -117,6 +117,7 @@ export class InfraStack extends cdk.Stack {
       runtime: lambda.Runtime.NODEJS_22_X,
       entry: 'lambda/handler/api/getHeroList.ts',
       handler: 'handler',
+      
       environment: {
         TABLE_NAME: heroTable.tableName
       }
@@ -135,6 +136,7 @@ export class InfraStack extends cdk.Stack {
         defaultCorsPreflightOptions: {
           allowOrigins: apigateway.Cors.ALL_ORIGINS,
           allowMethods: apigateway.Cors.ALL_METHODS,
+          allowHeaders: apigateway.Cors.DEFAULT_HEADERS
         },
       }
     );
