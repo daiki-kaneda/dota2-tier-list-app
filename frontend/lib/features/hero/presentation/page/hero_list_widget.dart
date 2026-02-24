@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart' hide Hero;
 import 'package:frontend/features/hero/domain/entity/hero.dart';
+import 'package:frontend/features/hero/presentation/extension/tier_color.dart';
 
 class HeroListWidget extends StatelessWidget {
   const HeroListWidget(this.heroes, {super.key});
@@ -24,8 +25,9 @@ class HeroListTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
+      leading: Container(width: 10,color: hero.tier.color,),
       title: Text(hero.name),
-      subtitle: Text("ピック数: ${hero.picks},勝利数: ${hero.wins},勝率: ${hero.winRate}"),
+      subtitle: Text("勝率: ${hero.winRate}"),
     );
   }
 }
