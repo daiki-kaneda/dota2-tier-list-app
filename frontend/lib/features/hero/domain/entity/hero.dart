@@ -47,4 +47,13 @@ abstract class Hero with _$Hero {
 
 enum Tier{
   S,A,B,C;
+
+  static Tier fromString(String value){
+    for(final t in Tier.values){
+      if(t.name==value){
+        return t;
+      }
+    }
+    throw ArgumentError("TierはS,A,B,Cのいずれかのみになります。");
+  }
 }
