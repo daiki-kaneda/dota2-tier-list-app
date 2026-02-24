@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:frontend/features/hero/presentation/provider/heroes_provider.dart';
+import 'package:intl/intl.dart';
 
 class HeroListHeader extends StatelessWidget {
   const HeroListHeader(this.createdAt, {super.key});
@@ -9,9 +10,11 @@ class HeroListHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final createdAtDateTime = DateTime.parse(createdAt);
+    final formatter = DateFormat("yyyy/MM/dd HH:mm:ss");
     return Column(
       mainAxisSize: MainAxisSize.min,
-      children: [Text('集計日時: $createdAt'), RefreshButton()],
+      children: [SelectableText('集計日時: ${formatter.format(createdAtDateTime.toLocal())}'), RefreshButton()],
     );
   }
 }
