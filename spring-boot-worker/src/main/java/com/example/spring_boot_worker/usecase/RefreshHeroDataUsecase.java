@@ -18,6 +18,8 @@ public class RefreshHeroDataUsecase {
 
     public void execute() {
         List<Hero> heroes = heroDataSource.fetchAllHeroes();
+        if(heroes.isEmpty())
+            throw new IllegalStateException("取得したヒーローのリストが空です。");
         heroRepository.saveAll(heroes);
     }
 }
