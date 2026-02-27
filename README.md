@@ -1,4 +1,5 @@
 # Dota2 Tier List Web App
+[![Java CI with Maven](https://github.com/daiki-kaneda/dota2-tier-list-app/actions/workflows/maven.yml/badge.svg)](https://github.com/daiki-kaneda/dota2-tier-list-app/actions/workflows/maven.yml)
 
 ![Dota2 Tier List Screenshot](docs/images/screenshot1.png)
 
