@@ -19,6 +19,8 @@ jobs:
         java-version: '21'
         distribution: 'temurin'
         cache: maven
+        cache-dependency-path: 'spring-boot-worker/pom.xml'
 
     - name: Build with Maven
+      working-directory: spring-boot-worker
       run: mvn -B test
