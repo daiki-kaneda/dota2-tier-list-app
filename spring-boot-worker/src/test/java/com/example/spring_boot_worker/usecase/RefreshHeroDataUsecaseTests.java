@@ -5,6 +5,7 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.any;
 
 import java.util.List;
 
@@ -31,7 +32,7 @@ public class RefreshHeroDataUsecaseTests {
 
     @Test
     @DisplayName("実行時に、ヒーローのデータが取得され、保存されること")
-    public void excute_WhenInvoked_FetchAllHeroDataAndSave() {
+    public void execute_WhenInvoked_FetchAllHeroDataAndSave() {
         List<Hero> expectedHeroes = List.of(
                 new Hero("Mars", 10, 6),
                 new Hero("Anti-Mage", 20, 11));
@@ -46,7 +47,7 @@ public class RefreshHeroDataUsecaseTests {
 
     @Test
     @DisplayName("取得したヒーローデータが空の時、保存せずにエラーを返すこと")
-    public void excute_WhenNoHeroDataFetched_ThrowsExceptionAndNotSave() {
+    public void execute_WhenNoHeroDataFetched_ThrowsExceptionAndNotSave() {
         List<Hero> emptyHeroes = List.of();
         when(heroDataSource.fetchAllHeroes())
                 .thenReturn(emptyHeroes);
@@ -58,7 +59,7 @@ public class RefreshHeroDataUsecaseTests {
                 });
 
         verify(heroRepository, never())
-                .saveAll(emptyHeroes);
+                .saveAll(any());
     }
 
 }
