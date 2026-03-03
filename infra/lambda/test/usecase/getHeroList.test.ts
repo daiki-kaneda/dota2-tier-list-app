@@ -1,8 +1,8 @@
 
 import { jest } from '@jest/globals';
-import { Hero, HeroList, HeroListSchema } from '../../../../lambda/entity/hero';
-import { getHeroList } from '../../../../lambda/usecase/getHeroList';
-import { HeroRepository } from '../../../../lambda/usecase/port/HeroRepository';
+import { Hero, HeroList, HeroListSchema } from '../../entity/hero';
+import { getHeroList } from '../../usecase/getHeroList';
+import { HeroRepository } from '../../usecase/port/HeroRepository';
 
 describe('getHeroList', () => {
 

@@ -1,4 +1,4 @@
-import { HeroSchema } from "../../../../lambda/entity/hero";
+import { HeroSchema } from "../../entity/hero";
 
 const createHero = ()=>({
     createdAt: '2026-01-01',
