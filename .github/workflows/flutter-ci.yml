@@ -27,6 +27,10 @@ jobs:
       - name: Install dependencies
         working-directory: frontend
         run: flutter pub get
+        
+      - name: Create dummy .env
+        working-directory: flutter-app
+        run: touch .env
 
       - name: Run tests
         working-directory: frontend
