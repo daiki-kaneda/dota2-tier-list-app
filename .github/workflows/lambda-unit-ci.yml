@@ -12,7 +12,7 @@ jobs:
 
     defaults:
       run:
-        working-directory: infra
+        working-directory: infra/lambda
 
     steps:
       - name: Checkout
@@ -23,7 +23,7 @@ jobs:
         with:
           node-version: 20
           cache: 'npm'
-          cache-dependency-path: infra/package-lock.json 
+          cache-dependency-path: infra/lambda/package-lock.json 
 
       - name: Install dependencies
         run: npm ci
