@@ -29,7 +29,7 @@ jobs:
         run: flutter pub get
         
       - name: Create dummy .env
-        working-directory: flutter-app
+        working-directory: frontend
         run: touch .env
 
       - name: Run tests
